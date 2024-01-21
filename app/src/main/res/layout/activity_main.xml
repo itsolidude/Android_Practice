@@ -27,4 +27,23 @@
         android:layout_height="wrap_content"
         android:minHeight="48dp"></EditText>
 
+    <CheckBox
+        android:id="@+id/checkbox_coffee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Do you drink coffee?" />
+
+    <Switch
+        android:id="@+id/switch_coffee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Do you drink coffee?" />
+
+    <RadioButton
+        android:id="@+id/radiobutton_coffee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Do you drink coffee?" />
+
+
 </LinearLayout>
