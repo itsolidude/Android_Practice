@@ -19,18 +19,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize View Binding
         variableBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(variableBinding.getRoot());
 
+        // Initialize ViewModel
         model = new ViewModelProvider(this).get(MainViewModel.class);
 
-        TextView textView = variableBinding.textview;
-        Button myButton = variableBinding.myButton;
-        EditText myEdit = variableBinding.myedittext;
+        // Observing the MutableLiveData from ViewModel
+        model.editString.observe(this, s -> {
+            variableBinding.textview.setText("Your edit text has " + s);
+        });
 
-        myButton.setOnClickListener(v -> {
-            String editString = myEdit.getText().toString();
-            textView.setText("Your edit text has : " + editString);
+        // Set OnClickListener for the button
+        variableBinding.myButton.setOnClickListener(v -> {
+            model.editString.postValue(variableBinding.myedittext.getText().toString());
         });
     }
 }
