@@ -3,4 +3,8 @@
     <string name="app_name">Oliver\'s Android Labs</string>
     <string name="hello_message">Hallo Welt!</string>
     <string name="button_message">Ich bin ein Knopf</string>
+    <string name="spin_message">Dreh Flage</string>
+    <string name="button1">Knopf1</string>
+    <string name="button2">Knopf2</string>
+    <string name="button3">Knopf3</string>
 </resources>
