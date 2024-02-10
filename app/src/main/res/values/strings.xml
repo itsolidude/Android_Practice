@@ -2,4 +2,14 @@
     <string name="app_name">Oliver\'s Android Labs</string>
     <string name="hello_message">Hello World!</string>
     <string name="button_message">I\'m a button</string>
+    <string name="enter_your_email_address">Enter your email address:</string>
+    <string name="login">Login</string>
+    <string name="type_your_password">Type your password:</string>
+    <string name="type_email_here">Type email here</string>
+    <string name="enter_your_email_address_prompt">Enter your email address</string>
+    <string name="type_your_password_prompt">Type your Password</string>
+    <string name="please_input_a_password">PLease input a password</string>
+    <string name="please_input_an_email_here">Please input an email here</string>
+    <string name="type_password_here">Type password here</string>
+    <string name="input_phone_number">Input Phone Number</string>
 </resources>
