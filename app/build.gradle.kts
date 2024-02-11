@@ -6,6 +6,7 @@ android {
     namespace = "algonquin.cst2335.kadv0001"
     compileSdk = 34
 
+
     defaultConfig {
         applicationId = "algonquin.cst2335.kadv0001"
         minSdk = 22
@@ -29,6 +30,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+
 }
 
 dependencies {
