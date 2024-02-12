@@ -12,6 +12,7 @@ import android.widget.Toast;
 /**
  * MainActivity for a password checker application.
  * This activity allows the user to enter a password and it then checks its complexity.
+ * Note: JavaDocs is still broken.
  *
  * @author Oliver K. - 041096826
  * @version 1.0

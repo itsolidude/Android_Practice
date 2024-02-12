@@ -92,7 +92,7 @@ public class MainActivityTest {
     public void testValidPassword() {
         onView(withId(R.id.textInputPassword)).perform(replaceText("Password123#$*"));
         onView(withId(R.id.LoginButton)).perform(click());
-        onView(withId(R.id.ViewPasswordPrompt)).check(matches(withText("Your password is complex enough")));
+        onView(withId(R.id.ViewPasswordPrompt)).check(matches(withText("Your password meets the requirements")));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class MainActivityTest {
                         isDisplayed()));
         appCompatEditText2.perform(replaceText("12345"), closeSoftKeyboard());
 
-        pressBack();
+        //pressBack();
 
         ViewInteraction materialButton = onView(
                 allOf(withId(R.id.LoginButton), withText("Login"),
