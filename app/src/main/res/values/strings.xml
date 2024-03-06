@@ -5,4 +5,14 @@
     <string name="type_your_password">Type your password:</string>
     <string name="login">Login</string>
     <string name="input_a_password">Input a password</string>
+    <string name="time_goes_here">Time goes here</string>
+    <string name="message_goes_here">Message goes here</string>
+    <string name="send">Send</string>
+    <string name="receive">Receive</string>
+    <string name="message_goes_here_receive">Message goes here</string>
+    <string name="time_goes_here_receive">Time goes here</string>
+    <string name="input_your_text">Input your text</string>
+    <string name="message">Message</string>
+    <string name="the_sender_avatar">The sender avatar</string>
+    <string name="the_receiver_avatar">The receiver avatar</string>
 </resources>
