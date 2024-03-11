@@ -106,19 +106,32 @@ public class ChatRoom extends AppCompatActivity {
     }
 
     // Handling send or receive messages
+// Send or receive messages
     private void sendMessage(boolean isSent) {
-        // Extracting text from the input field and clear it after sending
         String messageText = binding.textInput.getText().toString();
         if (!messageText.isEmpty()) {
-            // Creating a new message object and adding it to the ViewModel list
             String currentDateandTime = sdf.format(new Date());
             ChatMessage newMessage = new ChatMessage(messageText, currentDateandTime, isSent);
+
+            // Add the new message to the ViewModel list
             chatModel.addMessage(newMessage);
-            // Notifying the adapter that a new item has been inserted
+            // Notify the adapter to update the RecyclerView
             myAdapter.notifyItemInserted(chatModel.messages.getValue().size() - 1);
+            // Clear the input field
             binding.textInput.setText("");
+
+            // Insert the new message into the database
+            // You should do this in a background thread to avoid blocking the main thread
+            new Thread(() -> {
+                MessageDatabase db = Room.databaseBuilder(getApplicationContext(),
+                        MessageDatabase.class, "message_database").build();
+                ChatMessageDAO cmDAO = db.cmDAO();
+                // Insert the message into the database
+                cmDAO.insertMessage(newMessage);
+            }).start();
         }
     }
+
 // ViewHolder class for RecyclerView to hold and manage the view for each message
     private class MyRowHolder extends RecyclerView.ViewHolder {
         TextView messageText;
