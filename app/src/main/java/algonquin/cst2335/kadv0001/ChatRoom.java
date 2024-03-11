@@ -26,6 +26,8 @@ public class ChatRoom extends AppCompatActivity {
 
     // Binding for layout and ViewModel for data
     private ActivityChatRoomBinding binding;
+
+    // ViewModel object for managing and storing chat data
     private ChatRoomViewModel chatModel;
 
     // Adapter for RecyclerView
@@ -43,16 +45,19 @@ public class ChatRoom extends AppCompatActivity {
         // Initializing ViewModel
         chatModel = new ViewModelProvider(this).get(ChatRoomViewModel.class);
 
-        // Initialize your database and DAO (for simplicity, but consider async handling for production)
+        // Building the Room database and obtainig the DAO for database operations
         MessageDatabase db = Room.databaseBuilder(getApplicationContext(),
                 MessageDatabase.class, "message_database").allowMainThreadQueries().build();
         ChatMessageDAO cmDAO = db.cmDAO();
+
+        //Defining the adapter for the RecyclerView
         myAdapter = new RecyclerView.Adapter<MyRowHolder>() {
 
-            // Inflating appropriate layout for message
+            //Creating new rows for the RecyclerView
             @NonNull
             @Override
             public MyRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                // Determining which type of message layout to inflate based on the viewType
                 if (viewType == 0) { // Layout for sent messages
                     SentMessageBinding sentBinding = SentMessageBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
                     return new MyRowHolder(sentBinding.getRoot());
@@ -65,12 +70,13 @@ public class ChatRoom extends AppCompatActivity {
             // Binding message data to ViewHolder
             @Override
             public void onBindViewHolder(@NonNull MyRowHolder holder, int position) {
+                // Geting the message from the ViewModel and setting text views according
                 ChatMessage message = chatModel.messages.getValue().get(position);
                 holder.messageText.setText(message.getMessage());
                 holder.timeText.setText(message.getTimeSent());
             }
 
-            // Determining number of items
+            // Returning the size of the messages list
             @Override
             public int getItemCount() {
                 return chatModel.messages.getValue().size();
@@ -84,36 +90,36 @@ public class ChatRoom extends AppCompatActivity {
             }
         };
 
-        // Setting up RecyclerView
+        //Configuring the RecyclerView with a layout manager and the adapter
         binding.recycleView.setAdapter(myAdapter);
         binding.recycleView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Sending button click listener
+        // Sending button click listener / Seting the OnClickListener for the 'send' button
         binding.sendButton.setOnClickListener(v -> {
             sendMessage(true); // Sending a message
         });
 
-        // Receiving button click listener
+        // Receiving button click listener / Seting the OnClickListener for the 'receive' button
         binding.receiveButton.setOnClickListener(v -> {
             sendMessage(false); // Receiving a message
         });
     }
 
-    // Send or receive messages
+    // Handling send or receive messages
     private void sendMessage(boolean isSent) {
+        // Extracting text from the input field and clear it after sending
         String messageText = binding.textInput.getText().toString();
         if (!messageText.isEmpty()) {
+            // Creating a new message object and adding it to the ViewModel list
             String currentDateandTime = sdf.format(new Date());
             ChatMessage newMessage = new ChatMessage(messageText, currentDateandTime, isSent);
             chatModel.addMessage(newMessage);
+            // Notifying the adapter that a new item has been inserted
             myAdapter.notifyItemInserted(chatModel.messages.getValue().size() - 1);
             binding.textInput.setText("");
         }
     }
-
-    // ViewHolder class for RecyclerView
-// ViewHolder class for RecyclerView
-// ViewHolder class for RecyclerView
+// ViewHolder class for RecyclerView to hold and manage the view for each message
     private class MyRowHolder extends RecyclerView.ViewHolder {
         TextView messageText;
         TextView timeText;
@@ -137,10 +143,21 @@ public class ChatRoom extends AppCompatActivity {
                         .setPositiveButton("Yes", (dialog, cl) -> {
                             // Perform deletion action
                             if (position != RecyclerView.NO_POSITION) {
+                                // Store the deleted message and position
+                                ChatMessage deletedMessage = chatModel.messages.getValue().get(position);
                                 chatModel.messages.getValue().remove(position);
                                 myAdapter.notifyItemRemoved(position);
 
-                                Snackbar.make(itemView, "You deleted message #" + position, Snackbar.LENGTH_LONG).show();
+                                // Show the Snackbar with Undo button
+                                Snackbar snackbar = Snackbar.make(itemView, "Message deleted", Snackbar.LENGTH_LONG);
+                                snackbar.setAction("Undo", view -> {
+                                    // Insert the message back into the list at the original position
+                                    chatModel.messages.getValue().add(position, deletedMessage);
+                                    myAdapter.notifyItemInserted(position);
+                                });
+
+                                // Show the Snackbar
+                                snackbar.show();
                             }
                         })
                         .create()
