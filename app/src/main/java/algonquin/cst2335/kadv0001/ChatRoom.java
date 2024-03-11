@@ -1,15 +1,20 @@
 package algonquin.cst2335.kadv0001;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,7 +43,10 @@ public class ChatRoom extends AppCompatActivity {
         // Initializing ViewModel
         chatModel = new ViewModelProvider(this).get(ChatRoomViewModel.class);
 
-        // Adapter setup for RecyclerView
+        // Initialize your database and DAO (for simplicity, but consider async handling for production)
+        MessageDatabase db = Room.databaseBuilder(getApplicationContext(),
+                MessageDatabase.class, "message_database").allowMainThreadQueries().build();
+        ChatMessageDAO cmDAO = db.cmDAO();
         myAdapter = new RecyclerView.Adapter<MyRowHolder>() {
 
             // Inflating appropriate layout for message
@@ -104,14 +112,40 @@ public class ChatRoom extends AppCompatActivity {
     }
 
     // ViewHolder class for RecyclerView
-    class MyRowHolder extends RecyclerView.ViewHolder {
+// ViewHolder class for RecyclerView
+// ViewHolder class for RecyclerView
+    private class MyRowHolder extends RecyclerView.ViewHolder {
         TextView messageText;
         TextView timeText;
 
-        public MyRowHolder(@NonNull View itemView) {
+        public MyRowHolder(View itemView) {
             super(itemView);
+
             messageText = itemView.findViewById(R.id.message);
             timeText = itemView.findViewById(R.id.time);
+
+            // Set click listener for the entire row
+            itemView.setOnClickListener(v -> {
+                int position = getAbsoluteAdapterPosition();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
+                builder.setMessage("Do you want to delete the message: " + messageText.getText())
+                        .setTitle("Question:")
+                        .setNegativeButton("No", (dialog, cl) -> {
+                            // Do nothing if "No" is clicked
+                        })
+                        .setPositiveButton("Yes", (dialog, cl) -> {
+                            // Perform deletion action
+                            if (position != RecyclerView.NO_POSITION) {
+                                chatModel.messages.getValue().remove(position);
+                                myAdapter.notifyItemRemoved(position);
+
+                                Snackbar.make(itemView, "You deleted message #" + position, Snackbar.LENGTH_LONG).show();
+                            }
+                        })
+                        .create()
+                        .show();
+            });
         }
     }
-}
+    }
