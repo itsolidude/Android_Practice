@@ -145,6 +145,14 @@ public class ChatRoom extends AppCompatActivity {
         // Deleting all messages from the ViewModel and RecyclerView
         chatModel.messages.getValue().clear();
         myAdapter.notifyDataSetChanged();
+
+        // Delete messages from the database
+        new Thread(() -> {
+            MessageDatabase db = Room.databaseBuilder(getApplicationContext(),
+                    MessageDatabase.class, "message_database").build();
+            ChatMessageDAO cmDAO = db.cmDAO();
+            cmDAO.deleteAllMessages();
+        }).start();
     }
 
     // Handling send or receive messages
