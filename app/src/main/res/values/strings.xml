@@ -15,4 +15,6 @@
     <string name="message">Message</string>
     <string name="the_sender_avatar">The sender avatar</string>
     <string name="the_receiver_avatar">The receiver avatar</string>
+    <string name="about">About</string>
+    <string name="delete_this_item">Delete this item</string>
 </resources>

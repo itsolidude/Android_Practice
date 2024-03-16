@@ -8,11 +8,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -41,6 +45,9 @@ public class ChatRoom extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityChatRoomBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Seting the toolbar
+        setSupportActionBar(binding.myToolbar);
 
         // Initializing ViewModel
         chatModel = new ViewModelProvider(this).get(ChatRoomViewModel.class);
@@ -88,6 +95,8 @@ public class ChatRoom extends AppCompatActivity {
                 ChatMessage message = chatModel.messages.getValue().get(position);
                 return message.isSentButton() ? 0 : 1; // 0 for sent, 1 for received
             }
+
+
         };
 
         //Configuring the RecyclerView with a layout manager and the adapter
@@ -103,6 +112,39 @@ public class ChatRoom extends AppCompatActivity {
         binding.receiveButton.setOnClickListener(v -> {
             sendMessage(false); // Receiving a message
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflating menu / Adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.my_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.item_1) {
+                // Confirmation dialog for deleting all messages
+                new AlertDialog.Builder(this)
+                        .setMessage("Are you sure you want to delete all messages?")
+                        .setPositiveButton("Yes", (dialog, which) -> deleteAllMessages())
+                        .setNegativeButton("No", null)
+                        .show();
+                return true;
+        } else if (id == R.id.about_item) {
+            Toast.makeText(this, "Version 1.0, created by Oliver (Finally)", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteAllMessages() {
+        // Deleting all messages from the ViewModel and RecyclerView
+        chatModel.messages.getValue().clear();
+        myAdapter.notifyDataSetChanged();
     }
 
     // Handling send or receive messages
