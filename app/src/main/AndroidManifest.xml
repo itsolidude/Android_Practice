@@ -12,9 +12,6 @@
         android:theme="@style/Theme.OliversAndroidLabs"
         tools:targetApi="31">
         <activity
-            android:name=".receive_message"
-            android:exported="false" />
-        <activity
             android:name=".ChatRoom"
             android:exported="true">
             <intent-filter>
